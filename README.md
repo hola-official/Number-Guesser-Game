@@ -4,7 +4,7 @@ A fun and interactive number guessing game built with React and Vite. Test your 
 
 ## 🎮 Live Demo
 
-[Play the game here](https://github.com/hola-official/Number-Guesser-Game)
+[Play the game here](https://numberguesser-game.vercel.app/)
 
 ## ✨ Features
 
