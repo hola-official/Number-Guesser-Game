@@ -17,6 +17,7 @@ const NumberGuesser = () => {
 
   const initializeGame = () => {
     const settings = difficultySettings[difficulty];
+    // This will result in 50 when Math.random() returns 0.5
     setSecretNumber(Math.floor(Math.random() * settings.range) + 1);
     setAttempts(settings.attempts);
     setGuess("");
@@ -30,15 +31,10 @@ const NumberGuesser = () => {
 
   const handleGuess = () => {
     const numGuess = parseInt(guess);
+    const range = difficultySettings[difficulty].range;
 
-    if (
-      isNaN(numGuess) ||
-      numGuess < 1 ||
-      numGuess > difficultySettings[difficulty].range
-    ) {
-      setFeedback(
-        `Please enter a valid number between 1 and ${difficultySettings[difficulty].range}`
-      );
+    if (isNaN(numGuess) || numGuess < 1 || numGuess > range) {
+      setFeedback(`Please enter a valid number between 1 and ${range}`);
       return;
     }
 
@@ -58,15 +54,6 @@ const NumberGuesser = () => {
     }
 
     setGuess("");
-  };
-
-  const getFeedbackClasses = () => {
-    if (gameOver) {
-      return feedback.includes("Congratulations")
-        ? "bg-green-100 text-green-600"
-        : "bg-red-100 text-red-600";
-    }
-    return "bg-blue-50 text-blue-600";
   };
 
   return (
@@ -105,7 +92,7 @@ const NumberGuesser = () => {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
                   ${
                     difficulty === level
-                      ? "bg-blue-600 text-white"
+                      ? "bg-indigo-600 text-white"
                       : "bg-blue-50 text-blue-600 hover:bg-blue-100"
                   }`}
               >
@@ -129,11 +116,12 @@ const NumberGuesser = () => {
               type="number"
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
-              placeholder={`Enter number (1-${difficultySettings[difficulty].range})`}
+              placeholder={`Enter a number (1-${difficultySettings[difficulty].range})`}
               disabled={gameOver}
               onKeyPress={(e) => e.key === "Enter" && handleGuess()}
               className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900
                 placeholder:text-gray-400 focus:outline-none focus:border-blue-300 transition-all"
+              aria-label="Number input"
             />
             <button
               onClick={handleGuess}
@@ -146,9 +134,7 @@ const NumberGuesser = () => {
           </div>
 
           {feedback && (
-            <div
-              className={`p-4 rounded-lg text-center ${getFeedbackClasses()}`}
-            >
+            <div className="p-4 rounded-lg text-center bg-blue-50 text-blue-600">
               {feedback}
             </div>
           )}
@@ -159,7 +145,7 @@ const NumberGuesser = () => {
               className="w-full p-3 bg-blue-50 text-blue-600 rounded-lg
                 font-medium hover:bg-blue-100 transition-all flex items-center justify-center gap-2"
             >
-               Play Again
+              Play Again
             </button>
           )}
         </div>
